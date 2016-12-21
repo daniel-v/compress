@@ -50,7 +50,7 @@ main() {
     print('Headers: ${response.headers}');
     expect(body, isNot(equals('"Hello world"')));
 
-    var decoded = new String.fromCharCodes(GZIP.decode(bytes));
+    var decoded = new String.fromCharCodes(LZW.decode(bytes));
     expect(decoded, equals('Hello world'));
   });
 
