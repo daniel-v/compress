@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:angel_compress/angel_compress.dart';
 import 'package:angel_framework/angel_framework.dart';
+import 'package:lzw/lzw.dart';
 import 'package:test/test.dart';
 
 main() {
@@ -24,7 +25,7 @@ main() {
 
   test('can compress', () async {
     var rq = await client.getUrl(Uri.parse('$url/greet'));
-    rq.headers.add(HttpHeaders.ACCEPT_ENCODING, 'gzip');
+    rq.headers.add(HttpHeaders.ACCEPT_ENCODING, 'lzw');
     var response = await rq.close();
     var bytes =
         (await response.toList()).reduce((a, b) => []..addAll(a)..addAll(b));
@@ -34,7 +35,7 @@ main() {
     print('Headers: ${response.headers}');
     expect(body, isNot(equals('"Hello world"')));
 
-    var decoded = new String.fromCharCodes(GZIP.decode(bytes));
+    var decoded = new String.fromCharCodes(LZW.decode(bytes));
     expect(decoded, equals('Hello world'));
   });
 
@@ -55,7 +56,7 @@ main() {
 
   test('only when header is added or empty', () async {
     var rq = await client.getUrl(Uri.parse('$url/greet'));
-    rq.headers.add(HttpHeaders.ACCEPT_ENCODING, 'not-gzip');
+    rq.headers.add(HttpHeaders.ACCEPT_ENCODING, 'not-lzw');
     var response = await rq.close();
     var bytes =
         (await response.toList()).reduce((a, b) => []..addAll(a)..addAll(b));
@@ -70,7 +71,7 @@ main() {
 Angel createServer() {
   var app = new Angel()..get('/greet', 'Hello world');
   app.responseFinalizers
-    ..add(compress('gzip', GZIP))
+    ..add(compress('lzw', LZW))
     ..add((req, res) async {
       print('Final buf: ' + new String.fromCharCodes(res.buffer.toBytes()));
     });
