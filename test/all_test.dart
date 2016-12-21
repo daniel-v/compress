@@ -33,9 +33,9 @@ main() {
 
     print('Body: ${body}');
     print('Headers: ${response.headers}');
-    // expect(body, isNot(equals('"Hello world"')));
+    expect(body, isNot(equals('"Hello world"')));
     var decoded = new String.fromCharCodes(LZW.decode(bytes));
-    expect(decoded, equals('Hello world'));
+    expect(decoded, equals('"Hello world"'));
   });
 
   test('can compress if no header', () async {
@@ -47,9 +47,9 @@ main() {
 
     print('Body: ${body}');
     print('Headers: ${response.headers}');
-    // expect(body, isNot(equals('"Hello world"')));
+    expect(body, isNot(equals('"Hello world"')));
     var decoded = new String.fromCharCodes(LZW.decode(bytes));
-    expect(decoded, equals('Hello world'));
+    expect(decoded, equals('"Hello world"'));
   });
 
   test('only when header is added or empty', () async {
