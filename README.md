@@ -8,6 +8,7 @@ Angel hook to compress responses in a variety of formats.
 ```dart
 import 'package:angel_framework/angel_framework.dart';
 import 'package:angel_compress/angel_compress.dart';
+import 'package:lzw/lzw.dart';
 
 main() {
   var app = new Angel();
