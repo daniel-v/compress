@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 import 'package:angel_compress/angel_compress.dart';
 import 'package:angel_framework/angel_framework.dart';
@@ -40,6 +39,7 @@ main() {
 
   test('can compress if no header', () async {
     var rq = await client.getUrl(Uri.parse('$url/greet'));
+    rq.headers.add(HttpHeaders.ACCEPT_ENCODING, '*');
     var response = await rq.close();
     var bytes =
         (await response.toList()).reduce((a, b) => []..addAll(a)..addAll(b));
@@ -69,8 +69,8 @@ main() {
 Angel createServer() {
   var app = new Angel()..get('/greet', 'Hello world');
   app.before.add((req, res) async {
-      print('Incoming headers: ${req.headers}');
-      return true;
+    print('Incoming headers: ${req.headers}');
+    return true;
   });
   app.responseFinalizers
     ..add(compress('lzw', LZW))
