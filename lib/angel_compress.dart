@@ -29,6 +29,9 @@ RequestHandler compress(
                     .map((str) => str.trim().toLowerCase())
                     .toList()
                 : ['*'];
+        
+        if (allowedEncodings.isEmpty)
+            allowedEncodings.add('*');
 
         for (String encoding in allowedEncodings) {
           if (encoding == '*' || encoding == contentEncoding) {
