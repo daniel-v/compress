@@ -68,6 +68,10 @@ main() {
 
 Angel createServer() {
   var app = new Angel()..get('/greet', 'Hello world');
+  app.before.add((req, res) async {
+      print('Incoming headers: ${req.headers}');
+      return true;
+  });
   app.responseFinalizers
     ..add(compress('lzw', LZW))
     ..add((req, res) async {
