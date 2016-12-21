@@ -22,6 +22,7 @@ RequestHandler compress(
     if (!res.headers.containsKey(HttpHeaders.CONTENT_ENCODING) || recompress) {
         List<String> allowedEncodings =
             req.headers.value(HttpHeaders.ACCEPT_ENCODING) != null
+                || req.headers.value(HttpHeaders.ACCEPT_ENCODING).isEmpty
                 ? req.headers
                     .value(HttpHeaders.ACCEPT_ENCODING)
                     .split(',')
