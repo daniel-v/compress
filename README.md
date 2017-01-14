@@ -1,6 +1,6 @@
 # compress
 
-[![version 1.0.0](https://img.shields.io/badge/pub-v1.0.0-brightgreen.svg)](https://pub.dartlang.org/packages/angel_compress)
+[![version 1.0.0+1](https://img.shields.io/badge/pub-v1.0.0+1-brightgreen.svg)](https://pub.dartlang.org/packages/angel_compress)
 [![build status](https://travis-ci.org/angel-dart/compress.svg)](https://travis-ci.org/angel-dart/compress)
 
 Angel hook to compress responses in a variety of formats.
