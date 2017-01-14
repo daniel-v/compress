@@ -9,6 +9,11 @@ RequestHandler gzip(
         {bool recompress: false, Map<String, String> headers: const {}}) =>
     compress('gzip', GZIP, recompress: recompress, headers: headers);
 
+/// Calls [compress] with `'deflate'` and the [ZLIB] codec.
+RequestHandler deflate(
+        {bool recompress: false, Map<String, String> headers: const {}}) =>
+    compress('deflate', ZLIB, recompress: recompress, headers: headers);
+
 /// When `Accept-Encoding` contains '*' or [contentEncoding], compresses the
 /// response buffer with the given [codec]. Any [headers] will be sent as well.
 ///
@@ -22,8 +27,7 @@ RequestHandler compress(
   return (RequestContext req, ResponseContext res) async {
     if (!res.headers.containsKey(HttpHeaders.CONTENT_ENCODING) || recompress) {
       List<String> allowedEncodings =
-          req.headers.value(HttpHeaders.ACCEPT_ENCODING) != null ||
-                  req.headers.value(HttpHeaders.ACCEPT_ENCODING).isEmpty
+          req.headers.value(HttpHeaders.ACCEPT_ENCODING) != null
               ? req.headers
                   .value(HttpHeaders.ACCEPT_ENCODING)
                   .split(',')
