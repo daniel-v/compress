@@ -25,6 +25,8 @@ RequestHandler compress(
     String contentEncoding, Codec<List<int>, List<int>> codec,
     {bool recompress: false, Map<String, String> headers: const {}}) {
   return (RequestContext req, ResponseContext res) async {
+    // if we can't write the output, fall through
+    if (!res.isOpen) return true;
     if (!res.headers.containsKey(HttpHeaders.CONTENT_ENCODING) || recompress) {
       List<String> allowedEncodings =
           req.headers.value(HttpHeaders.ACCEPT_ENCODING) != null
@@ -40,7 +42,7 @@ RequestHandler compress(
 
       for (String encoding in allowedEncodings) {
         if (encoding == '*' || encoding == contentEncoding) {
-          res.headers.addAll(headers ?? {});
+          res.headers.addAll(headers ?? const {});
           res.headers[HttpHeaders.CONTENT_ENCODING] = contentEncoding;
           var bytes = res.buffer.takeBytes();
           var encoded = codec.encode(bytes);

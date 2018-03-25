@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:convert';
 import 'package:angel_compress/angel_compress.dart';
 import 'package:angel_framework/angel_framework.dart';
 import 'package:lzw/lzw.dart';
@@ -7,11 +8,13 @@ import 'package:test/test.dart';
 main() {
   HttpClient client;
   HttpServer server;
+  Angel app;
   String url;
 
   setUp(() async {
     client = new HttpClient();
-    server = await createServer().startServer();
+    app = await createServer();
+    server = await app.startServer();
     url = 'http://${server.address.address}:${server.port}';
   });
 
@@ -63,6 +66,20 @@ main() {
     print('Body: ${body}');
     print('Headers: ${response.headers}');
     expect(body, equals('"Hello world"'));
+  });
+
+  test('will not attemp compression if response is closed', () async {
+    app.get('/closedtest', (req, ResponseContext res) async {
+      res.write('closed');
+      await res.close();
+      return false;
+    });
+    var rq = await client.getUrl(Uri.parse('$url/closedtest'));
+    rq.headers.add(HttpHeaders.ACCEPT_ENCODING, '*');
+    var response = await rq.close();
+    expect(response.headers.value(HttpHeaders.CONTENT_ENCODING), isNull);
+    var res = await response.transform(utf8.decoder).join();
+    expect(res, 'closed');
   });
 }
 
